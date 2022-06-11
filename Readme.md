@@ -56,8 +56,8 @@ Documentation complète du projet de formation Symfony Progica. L'idée est d'av
 
 - Dans **src>Controller** créer fichier **HomeController.php** qui contiendra les controllers de la navbar.
 - Le namespace **App\Controller** permettra d'appeler le fichier dans **routes.yaml** plus tard.
-- **Symfony\Component\HttpFoundation\Response** permet la création de notre class en controller.
-- **Symfony\Bundle\FrameworkBundle\Controller\AbstractController** permet d'utiliser par la suite la méthode render() dans nos fonctions de classes. Ce qui rend plus simple et plus lisible le code.
+- **Symfony\Component\HttpFoundation\Response** permet à notre controller de fournir une reponse à la route demandée pour afficher le template.
+- **Symfony\Bundle\FrameworkBundle\Controller\AbstractController** permet d'utiliser par la suite la méthode render() dans nos fonctions de classes. Ce qui rend plus simple et plus lisible le code pour transmettre la vue demandée.
 - On extends la classe **AbstractController** à la classe **HomeController** (qui va contenir tous nos controllers) de navbar pour utiliser la méthode render().
 - On créer nos controller dans des functions public :
 
@@ -81,12 +81,37 @@ Documentation complète du projet de formation Symfony Progica. L'idée est d'av
 - Dans chaque fichier on importe **base.html.twig** à la racine du dossier templates : `{% extends "base.html.twig" %}`.
 - Dans **base.html.twig** : implémentation CDN de bootstrap, importation d'une navbar et création des liens "home" et "contact" dans la navbar.
 
+## Routes annotations et twig
+- Dans **HomeController.php** implémenter `use Symfony\Component\Routing\Annotation\Route;`
+- Si ce n'est pas implémenté utiliser la commande `composer require annotations`
+- Au dessus de chaque fonction public dans **HomeController.php** :
+
+`/**`
+  
+`*@Route("nomDeLaRouteDansL'URL", name="nomController_nomFonction")`
+
+`*/`
+
+- Le `name`sera utiliser dans twig dans le `{{ path('nom_route') }}` pour créer des liens dans la navbar par exemple
+- `php bin/console debug:router` : pour avoir des informations sur nos routes
+- Décorons les liens twig avec la classe `active`:
+  - **HomeController.php** > 
+  
+  `render('fichier.ext', [`
+
+  `'menu' => 'home'`
+
+  `]);`
+
+  - **base.html.twig** > `class=" {% if menu == 'home' %} active {% endif %}"`
+  - Même chose pour contact.
+
+## Doctrine BDD
+
 ## Configuration fichier .env
 
 - Ligne 27 : postgresql mis en commentaire;
 - Ligne 26 : décommenté et server MariaDB sur xamp configurée.
-
-## Doctrine BDD
 
 ### A cause du problème de version :
 - Installation de doctrine requis :
@@ -188,6 +213,12 @@ Dans cette partie on va créer un système de CRUD dans une partie administratio
 ## Création de la partie admin
 
 - Dans **src > Controller** on créer **Admin/AdminController.php**
+
+
+# Quand tout refais ! :
+
+- **git push -u origin main**
+- Faire la configuration du monsieur pour que le html soit autocomplété par twig et que le ctrl + s remette bien les indentations
 
 
 
