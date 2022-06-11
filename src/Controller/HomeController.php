@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
   /**
-   * @Route("home", name="home_index")
+   * @Route("/", name="home_index")
    */
   public function index(ManagerRegistry $doctrine)
   {
@@ -21,17 +21,17 @@ class HomeController extends AbstractController
     $gite = $repository->find(1);
     $gites = $repository->findAll();
 
-    dump($gite);
+    dump($gites);
 
     // $manager = $doctrine->getManager();
 
     // $gite = new Gite();
 
     // $gite
-    //   ->setName('Mon premier Gite')
-    //   ->setDescription('Une longue description')
-    //   ->setSurface(80)
-    //   ->setChambre(3)
+    //   ->setNom('Gite Famille')
+    //   ->setDescription('Une description cocon')
+    //   ->setSurface(120)
+    //   ->setChambre(4)
     //   ->setCouchage(6);
 
     // $manager->persist($gite);
