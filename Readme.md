@@ -1,6 +1,7 @@
 # Projet de formation
 
 Documentation complète du projet de formation Symfony Progica. L'idée est d'avoir un reccueil "step by step" permettant de refaire le projet à l'identique et de comprendre son cheminement.
+Note,  le projet à été refait en cours de route à cause d'un problème de serveur.
 
 # IDE
 
@@ -21,11 +22,6 @@ Documentation complète du projet de formation Symfony Progica. L'idée est d'av
 
 - symfony serve
 - ctrl + c 
-
-## Pb de version php
-
-- composer install --ignore-platform-reqs
-- (Ps : pb de version réglé plus bas : section **Doctrine BDD**)
 
 # Avancée du projet
 
@@ -110,8 +106,8 @@ Documentation complète du projet de formation Symfony Progica. L'idée est d'av
 
 ## Configuration fichier .env
 
-- Ligne 27 : postgresql mis en commentaire;
-- Ligne 26 : décommenté et server MariaDB sur xamp configurée.
+- Ligne 31 : postgresql mis en commentaire;
+- Ligne 30 : ``DATABASE_URL="mysql://root@127.0.0.1:3306/progica?serverVersion=10.4.22-MariaDB&charset=utf8mb4"``
 
 ### A cause du problème de version :
 - Installation de doctrine requis :
@@ -201,9 +197,6 @@ Du controller au template :
 Bootstrap me fait un comportement curieux avec les cards, elles se supperposent sur le tier de l'espace. Le row ne prend qu'un tier de son container.
 Problème résolu : c'était un `style="width: 18rem;"` glisser dans la  div de ma row.
 
-## Problème de connection au serveur
-
-Depuis la mauvaise installation de la commande `$ symfony server:ca:install` les navigateurs ne peuvent plus se connecter à mon localhost (il refuse la connection en http/https/8080/8000/Ect). Plus de détails ici : https://stackoverflow.com/questions/72515228/the-commande-symfony-servercainstall-have-break-my-connexion-to-my-localhost
 
 # Le CRUD
 
