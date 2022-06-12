@@ -229,10 +229,15 @@ Dans cette partie on va créer un système de CRUD dans une partie administratio
 
 Pour gérer les actions des buttons **Modifier** et **Supprimer** (mais peut-être aussi d'autres méthodes utiles) on va séparer le code et créer un nouveau fichier dans **Controller > Admin > GiteController.php** ave une fonction ``show`` qui affiche nos gites selon leur id passé en paramètre de la route. Puis on créer dans templates **gite > show.html.twig** avec l'extends **base.html.twig**. Pour que la variable menu ne nous pose pas de problème on utilise une condition twig dans la navbar : `if not (menu is defined) or` + condition précédente. On créer la vu "show" d'un gite et on l'affiche avec un des id déjà présent dans notre BDD pour voir si ça marche.
 
-# Problème d'affichage
+### Problème d'affichage (résolu)
 
 En cliquant sur les cards dans home la première donne un # dans l'url et les deux autres une erreur `Impossible to access an attribute ("nom") on a null variable.`
-Problème dans la récupération de la donnée ou dans l'affichage ? Je commit et je règle ça !
+Résolution : dans le "show twig" `gite.id` dans le path ``id: gite.id`` était noté entre " ".
+Forcément la machine attendait un int et reçevait une chaîne de caractère.
+
+## Créer un Gite à partir de la plateforme
+
+Pour le client qui ne sait pas coder mais qui administre le site (principe d'un cmd avec back-office quelque part).
 
 
 # Todo temporaire :

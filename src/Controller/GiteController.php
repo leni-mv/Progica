@@ -13,16 +13,21 @@ class GiteController extends AbstractController
   /**
   * @Route("gite/{id}", name="gite_show")
   */
-  public function show(ManagerRegistry $doctrine, $id)
-  {
+  public function show(Gite $gite){ 
+  # On peut aussi faire comme ça pour se simplifier la vie
+  # Vive Symfony, Vive la France, Vive la République XD
 
-    $repository = $doctrine->getRepository(Gite::class);
+  // }
+  // public function show(ManagerRegistry $doctrine, int $id)
+  // {
 
-    $gite = $repository->find($id);
+  //   $repository = $doctrine->getRepository(Gite::class);
+
+  //   $gite = $repository->find($id);
+  //   dump($gite);
 
     return $this->render('gite/show.html.twig',[
       'gite' => $gite,
-      'menu' => 'show'
     ]);
   }
 }
