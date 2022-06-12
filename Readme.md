@@ -328,15 +328,3 @@ https://symfony.com/doc/6.0/security/csrf.html#generating-and-checking-csrf-toke
 
 
 
-
-
-# Todo temporaire :
-
-- Voir comment lier ce repo à github branche main
-- Supprimer seconde branche
-
-
-
-
-
-
