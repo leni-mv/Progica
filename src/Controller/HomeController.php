@@ -18,7 +18,7 @@ class HomeController extends AbstractController
 
     $repository = $doctrine->getRepository(Gite::class);
 
-    $gite = $repository->find(1);
+    // $gite = $repository->find(1);
     $gites = $repository->findAll();
 
     dump($gites);
@@ -41,7 +41,7 @@ class HomeController extends AbstractController
 
     return $this->render("home/index.html.twig",[
       'menu' => 'home',
-      'gite' => $gite,
+      // 'gite' => $gite,
       'gites' => $gites
     ]);
   }

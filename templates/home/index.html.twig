@@ -17,18 +17,19 @@
   </div>
   
   {% for gite in gites %}
-  <div class="col-4">
 
-    <div class="card" style="width: 18rem;">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{ gite.nom }}</h5>
-        <p class="card-text">{{ gite.description }}</p>
-        <a href="{{ path("gite_show", {id: gite.id}) }}" class="btn btn-primary">Détails</a>
+    <div class="col-4">
+
+      <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ gite.nom }}</h5>
+          <p class="card-text">{{ gite.description }}</p>
+          <a href="{{ path("gite_show", {id: gite.id}) }}" class="btn btn-primary">Détails</a>
+        </div>
       </div>
+    
     </div>
-   
-  </div>
 
   {% endfor %}
 </div>

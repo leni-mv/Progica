@@ -326,5 +326,25 @@ https://symfony.com/doc/6.0/security/csrf.html#generating-and-checking-csrf-toke
 
 ## Fixtures
 
+- `composer req orm-fixtures --dev` : pour installer le paquet
+- `php bin/console make:fixture` : pour créer nos fausses données en mode dèv.
+- On l'appel `GiteFixtures`
+- Création de `src/DataFixtures/GiteFixtures.php`
+- C'est le fichier **GiteFixtures.php** qui nous intéresse
+- On créer notre objet git dans la fonction **load**
+- On boucle avec un ``for`` sur autant de données que souhaité
+- Dans le ``for`` on utilise les méthodes ``set`` de notre objet Gite (on pense bien à importer la classe entité)
+- On persist(notre objet)
+- On sort de la boucle et `flush`
+- `php bin/console doctrine:fixtures:load` pour enregistrer dans la BDD
+- OU `php bin/console doctrine:fixtures:load --append` pour garder les anciennes données en plus des nouvelles.
+- On fait "yes" !
+- Fini !
+
+# Problème
+ gite.nom n'est plus reconnu dans mon templates/home/index
+
+## La suite sur la sécurité
+
 
 
