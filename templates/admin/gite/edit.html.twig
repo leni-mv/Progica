@@ -1,0 +1,24 @@
+{% extends "dashboard.html.twig" %}
+
+{% block title %}Editer un Gite{% endblock %}
+
+{% block body %}
+
+<h2>Editer un Gite</h2>
+
+{{ form_start(formGite) }}
+
+{{ form_row(formGite.nom) }}
+{{ form_row(formGite.surface) }}
+{{ form_row(formGite.chambre) }}
+{{ form_row(formGite.couchage) }}
+{{ form_row(formGite.description) }}
+
+<div class="form-group">
+<button type="submit" class="btn btn-success"> Editer </button>
+<button type="reset" class="btn btn-light"> Annuler </button>
+</div>
+
+{{ form_end(formGite) }}
+
+{% endblock %}

@@ -2,6 +2,24 @@
 
 {% block body %}
 
+{% for message in app.flashes('success') %}
+
+<div class="alert alert-primary">
+  {{message}}
+</div>
+  
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+
+<div class="alert alert-danger">
+  {{message}}
+</div>
+  
+{% endfor %}
+
+<a href="{{ path('admin_gite_create') }}" class="btn btn-success"> Ajouter un nouveau Gite </a>
+
 <table class="table">
   <thead>
     <tr>
@@ -17,8 +35,14 @@
       <td>{{ gite.id }}</td>
       <td>{{ gite.nom }}</td>
       <td>
-        <button>Modifier</button>
-        <button>Supprimer</button>
+        <a class="btn btn-success" href="{{ path('admin_gite_edit', {id: gite.id }) }}" >Editer</a>
+
+        <form action="{{ path('admin_gite_delete', {id: gite.id}) }}" method="post">
+        
+          <input type="hidden" name="token" value="{{ csrf_token('gite_delete') }}"/>
+          <input type="submit" class="btn btn-light" value="Suprimer"/>
+        
+        </form>
       </td>
     </tr>
 

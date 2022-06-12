@@ -239,6 +239,96 @@ Forcément la machine attendait un int et reçevait une chaîne de caractère.
 
 Pour le client qui ne sait pas coder mais qui administre le site (principe d'un cmd avec back-office quelque part).
 
+Création du Front et des liens :
+- **src > Admin > AdminController**:
+  - Création d'un `public function create()` avec le name route `admin_gite_create` qui rend la vue :
+  - ``admin/gite/create.html.twig`` (a créer dans l'architecture) à laquelle on **extends** le **dashboard**
+  - Sur le dashboard on créer le button (balise **a** class **btn**) qui renvoi à **Create** dans la vue.
+  - Mise en page.
+
+Création du formulaire de création de gites :
+- **src > Admin > AdminController > fonction create**
+- cf doc form sur Symfony commande : ``composer require symfony/form`` OU :
+- `php bin/console make:form` : c'est cette méthode que l'on va utiliser ici
+- ATTENTION : La norme d'écriture de classe de formulaire s'écrit toujours ave **Type** à la fin. Ici on va nommer notre classe de formulaire **GiteType**
+- On lui passe l'Entité **Gite**
+- **src > Form > GiteType.php** est créer. Deux fonction y sont disponible :
+  - Le **buildForm** qui permet de créer notre formulaire.
+  - Le **configureOptions** qui permet de créer des options pour notre formulaire.
+- Grâce à **AbstractController** on peut utiliser la méthode `createForm()` pour créer un formulaire dans notre fonction `create`
+- Comme il retourne un objet on le passe dans une variable avec les bons arguments :
+
+`$gite = new Gite();`
+
+``$form = $this->createForm(GiteType::class, $gite);``
+
+- Enfin on use `renderForm` au lieu de `render` OU en paramètre de render on note `$form->createView()`
+- Dans twig on utilise ``{{ form(``name de notre formulaire dans le paramètre render. Ici : ``formGite) }}``
+
+Intégrer Bootstrap en twig :
+- Notre formulaire est un peu moche donc on va dans **config > packages > twig.yaml** et on rajoute sous `twig:` cette ligne : `form_themes: ['bootstrap_5_layout.html.twig']`
+- Maintenant tous nos formulaire auront par défaut une mise en page Bootstrap. Il est possible de faire la même chose avec d'autres framework ou de faire nos propre templates (cf doc)
+
+Forms mis à notre disposition par twig pour parsonaliser notre formulaire :
+- entre un ``{{ form_start(formGite) }}`` et un ``{{ form_end(formGite) }}`` :
+  - form_row(formGite.nom/ex) : contenant du champ
+  - form_label : titre du champ
+  - form_widget : champ à remplir
+  - form_errors : erreur
+  - form_help() : aide utilisateur
+- Avant le end dans un **form-group** on ajoute un boutton ajouter et annuler.
+
+Retour dans **AdminController > create** pour traiter les donnée envoyées:
+- `$form->handleRequest($request);` : récupère la réponse du formulaire (penser à bien importer le component **httpFoundation\Request**)
+- `if($form->isSubmitted() && $form->isValid()){` : On vérifie que le formulaire a été soumis et si il est valide
+- `$em = $doctrine->getManager();` : On a mis en paramètre de la fonction create ``ManagerRegistery $doctrine`` pour récupérer le manager qui va enregistrer le nouveau gite en BDD
+- `$em->persist($gite);`
+- `$em->flush();`
+- `return $this->redirectToRoute('admin_index');` : Pour retourner à la liste de nos gite avec celui nouvellement créer ! (Youpi !)
+
+## Modifir un gite/un objet en BDD
+
+- **AdminController** : créer fonction `edit()`
+  - Même démarche que pour create SAUF QUE 1) pas besoin de créer un nouvel objet(on bosse sur un objet existant) 2) la méthode ``persist()`` peut être retirée, elle ne sert que pour les nouveaux éléments. Pour l'édition on peut directement ``flush`` *-*
+  - Ajout de la méthode `addFlash`(équivalent d'une alerte en JS) :
+  - **AdminController** > après le ``flush`` :
+  
+  `$this->addFlash('success', 'Votre Gite a bien été créé');`
+
+  - Dans twig on utilise la variable global `app` dans la base.html.twig. Nous on va la faire en haut de l'index des gites car c'est là que retourne l'admin une fois le git enregistré ou modifié :
+
+  `{% for message in app.flashes('success') %}`
+
+  `<div class="alert alert-primary">`
+
+  `{{message}}`
+
+  `</div>`
+
+  `{% endfor %}`
+
+## Delete un objet !
+
+Dernière partie du crud. Ici encore rien de bien compliqué. On reprends la structure d'édition d'un objet et on ajoute la méthode `remove($gite)` avant le flush. On lie le path twig et le tour est joué.
+
+### Sécurité ! Token :
+**Sécuriser la suppression** d'éléments via un token (clé de sécurité). Cela évitera que des utilisateurs malveillants suppriment via l'url et l'id nos gites :
+- Sous le boutton de suppression on créer un input hidden (caché) avec un name avec une syntaxe particulière : `_token`. L'underscore symbolise les éléments qu'on peut ensuite récupérer en session. Ici pas besoin de mettre l'underscore si on suit la doc donc on va s'en passer. On donne un ``value={{ csrf_token('gite_delete') }}``
+- Note: dans la version Symfony 5 on aurait concaténé avec gite.id ainsi : ``value={{ csrf_token('gite_delete' ~ gite.id) }}``. En version Symfony 6 on a une erreur de Token non valid.
+- Doc : **Generating and Checking CSRF Token Manually** pour plus d'infos.
+- Cette input à besoin d'être dans un form pour être envoyé en même temps que requête. On mets donc l'input avec le buton supprimer dans un form en méthode post et une action qui renvoie à ``{{ path('admin_gite_delete')}}``
+- On pense bien à préciser le paramètre ``gite.id`` dans le path et voilà !
+
+Vérification du token :
+- Dans le controller cf la doc Symfony qui est très bien faites :
+
+https://symfony.com/doc/6.0/security/csrf.html#generating-and-checking-csrf-tokens-manually
+
+## Fixtures
+
+
+
+
 
 # Todo temporaire :
 
