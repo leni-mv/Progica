@@ -344,7 +344,30 @@ https://symfony.com/doc/6.0/security/csrf.html#generating-and-checking-csrf-toke
 # Problème
  gite.nom n'est plus reconnu dans mon templates/home/index
 
-## La suite sur la sécurité
+## Authentifacation et sécurisation de la partie admin
+
+### Créations des users
+- Looker la doc symfony Security
+- `$php bin/console make:user` : User, yes db, username, yes crypt password
+- Entity et Repository User create and
+- update Entity/User et security.yalm dans config
+- Il nous propose trois actions : looker notre nouvelle entité, comment la modifier et créer une authentification
+- `php bin/console make:migration` et `php bin/console doctrine:migrations:migrate`, yes
+- Table user ajoutée en DB
+- `php bin/console make:fixtures`, UserFixtures
+- UserFixtures.php :
+
+`$user = new User();`
+
+`$user->setUserName('admin')`
+``->set passeword('admin')``
+`->setRole["ROLE_ADMIN]` : USER ADMIN ou SUPERADMIN sont les trois rôles disponibles
+- ``$manager->persist($user);`` et `$manager->flush();`
+- `php bin/console doctrine:fixtures:load` : pour enregistrer dans db. Le problème avec cette méthode c'est que le mdp n'est pas crypté :
+- On utiliser le component `UserPasswordHasherInterface` qui nous donne la méthode `->hashpasseword()`
+- Dans la fixture on créer une méthode privée pour intégrer le component dans la class de notre fixtures : `private UserPasswordHasherInterface $hasher;`
+- En dessous on créer un constructeur : `public function __construct(UserPasswordHasherInterface $hasher){`
+- `$this->hasher = $hasher;`
 
 
 
