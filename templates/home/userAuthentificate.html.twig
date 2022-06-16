@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "connectUsers.html.twig" %}
 
 {% block body %}
 <h1> Bienvenue </h1>
@@ -26,7 +26,7 @@
         <div class="card-body">
           <h5 class="card-title">{{ gite.nom }}</h5>
           <p class="card-text">{{ gite.description }}</p>
-          <a href="{{ path('app_login') }}" class="btn btn-primary">Détails</a>
+          <a href="{{ path("gite_show", {id: gite.id}) }}" class="btn btn-primary">Détails</a>
         </div>
       </div>
     

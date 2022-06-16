@@ -55,4 +55,32 @@ class HomeController extends AbstractController
       'menu' => 'contact'
     ]);
   }
+
+  /**
+   * @Route("home/user", name="home_user_connected")
+   */
+  public function connected(ManagerRegistry $doctrine)
+  {
+    $repository = $doctrine->getRepository(Gite::class);
+
+    // $gite = $repository->find(1);
+    $gites = $repository->findAll();
+
+    // dump($gites);
+
+    return $this->render("home/userAuthentificate.html.twig", [
+      'gites' => $gites,
+      'menu' => 'home'
+    ]);
+  }
+
+   /**
+   * @Route("user/contact", name="home_connectusers_contact")
+   */
+  public function contactConnect()
+  {
+    return $this->render("home/userAuthentificatesContact.html.twig", [
+      'menu' => 'contact'
+    ]);
+  }
 }

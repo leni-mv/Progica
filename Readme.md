@@ -341,10 +341,13 @@ https://symfony.com/doc/6.0/security/csrf.html#generating-and-checking-csrf-toke
 - On fait "yes" !
 - Fini !
 
-# Problème
+# Problème (résolu)
  gite.nom n'est plus reconnu dans mon templates/home/index
+ Résolu :une simple card qui se trouvait au dessus de la boucle for dans la template twig avec la variable gite.
 
-## Authentifacation et sécurisation de la partie admin
+# Création utilisateurs et Authentification
+
+## Créer un utilisateur et sécuriser le pass
 
 ### Créations des users
 - Looker la doc symfony Security
@@ -355,19 +358,58 @@ https://symfony.com/doc/6.0/security/csrf.html#generating-and-checking-csrf-toke
 - `php bin/console make:migration` et `php bin/console doctrine:migrations:migrate`, yes
 - Table user ajoutée en DB
 - `php bin/console make:fixtures`, UserFixtures
+
+### Sécuriser password
 - UserFixtures.php :
 
 `$user = new User();`
 
 `$user->setUserName('admin')`
 ``->set passeword('admin')``
-`->setRole["ROLE_ADMIN]` : USER ADMIN ou SUPERADMIN sont les trois rôles disponibles
+`->setRole(["ROLE_ADMIN"])` : USER ADMIN ou SUPERADMIN sont les trois rôles disponibles
 - ``$manager->persist($user);`` et `$manager->flush();`
 - `php bin/console doctrine:fixtures:load` : pour enregistrer dans db. Le problème avec cette méthode c'est que le mdp n'est pas crypté :
+
 - On utiliser le component `UserPasswordHasherInterface` qui nous donne la méthode `->hashpasseword()`
 - Dans la fixture on créer une méthode privée pour intégrer le component dans la class de notre fixtures : `private UserPasswordHasherInterface $hasher;`
-- En dessous on créer un constructeur : `public function __construct(UserPasswordHasherInterface $hasher){`
-- `$this->hasher = $hasher;`
+- En dessous on créer un constructeur : 
+
+`public function __construct(UserPasswordHasherInterface $hasher){`
+
+`$this->hasher = $hasher;`
+
+- `->setPassword($this->hasher->hashPassword($admin, 'admin'))`, on enregistre et :
+- `php bin/console doctrine:fixtures:load --purge-with-truncate  ` : la dernière commande permet d'intervertir plutôt que de recréer un user.
+
+## Authentification
+- `php bin/console make:auth` : créer notre système d'authentification
+- [1] login form > nomDeClass : UserAuthentificator > entrée : on garde le nom de controller de securité par défaut > entrée : on est d'accord pour la création automatique d'un URL de login
+- On a maintenant un controller, un template et notre **UserAuthentificator.php** dans **src/Security/User** a customizer pour définir la route une fois la connection faites ! OwO
+- On commente la ligne 54 et on décommente la ligne 53
+- On y remplace le name `some_route` par `home_index`
+- Dans base template on créer le login avec le name `app_login` définie dans notre **UserAuthentificator.php**
+- Maintenant on peut se connecter en tant qu'administrateur.
+
+### user lambda
+
+- Créons un utilisateur qui n'aura pas les droits administrateurs dans **UserFixtures.php** : même chose que pour admin sauf qu'on renomme la variable ``$admin > $user`` pour plus de clarté ET on remplace ``ROLE_ADMIN`` par ``ROLE_USER``.
+- Ensuite dans **security.yaml > access_control** on ajoute `- { path: ^/admin, roles: ROLE_ADMIN}` : cela permet de donner accès aux pages ayant **admin** dans leur routes seulement aux users ayant le `ROLE_ADMIN` dans leur paramètre roles.
+
+### logout
+
+Là ça va être une affaire de customization puisqu'il suffit de donner le name app_logout à notre lien de menu pour avoir le logout. Alors ? Comment on s'organise ?
+L'administrateur à le droit à tout, le user à home et après qu'il soit connecté ou non.
+
+- Copier-coller la page home dans un accés réservé aux utilisateurs connectés. Pour les utilisateurs non connecté faire que les bouttons renvoi à la page login (app_login)
+
+- renvoyé dans le controller la page home des users connectés si connection réussie
+
+- pour l'administrateur idem et on rajoute un lien admin dans le menu pour retourner au dashboard
+
+- Dans ces deux templates remplacer login par logout et mettre app_logout en name.
+
+
+
 
 
 
